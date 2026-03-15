@@ -26,8 +26,8 @@ if (empty($data['user_id']) || empty($data['product_id']) || empty($data['quanti
     exit();
 }
 
-$user_id = $data['user_id'];
-$product_id = intval($data['product_id']); // Convert to integer
+$user_id = intval($data['user_id']); // Convert to integer
+$product_id = strval($data['product_id']); // Keep as string - product_id is VARCHAR
 $quantity = intval($data['quantity']);
 
 if ($quantity < 1) {
@@ -49,7 +49,7 @@ if (!$check_stmt) {
     exit();
 }
 
-$check_stmt->bind_param("ii", $user_id, $product_id);
+$check_stmt->bind_param("is", $user_id, $product_id);
 $check_stmt->execute();
 $result = $check_stmt->get_result();
 

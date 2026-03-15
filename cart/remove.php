@@ -26,8 +26,8 @@ if (empty($data['user_id']) || empty($data['product_id'])) {
     exit();
 }
 
-$user_id = $data['user_id'];
-$product_id = intval($data['product_id']); // Convert to integer
+$user_id = intval($data['user_id']); // Convert to integer
+$product_id = strval($data['product_id']); // Keep as string - product_id is VARCHAR
 
 $db = new Database();
 $conn = $db->connect();
@@ -42,7 +42,7 @@ if (!$delete_stmt) {
     exit();
 }
 
-$delete_stmt->bind_param("ii", $user_id, $product_id);
+$delete_stmt->bind_param("is", $user_id, $product_id);
 
 if ($delete_stmt->execute()) {
     if ($delete_stmt->affected_rows > 0) {

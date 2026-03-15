@@ -24,7 +24,7 @@ if (!isset($_GET['user_id']) || empty($_GET['user_id'])) {
     exit();
 }
 
-$user_id = $_GET['user_id'];
+$user_id = intval($_GET['user_id']);
 
 $db = new Database();
 $conn = $db->connect();
