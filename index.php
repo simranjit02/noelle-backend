@@ -1,36 +1,9 @@
 <?php
-$base_path = __DIR__;
-$request_uri = $_SERVER['REQUEST_URI'];
+// This file is no longer used when using .router.php
+// The router (.router.php) handles all requests
+// Keep this for backward compatibility if needed
 
-// Parse URL to get path without query string
-$url_parts = parse_url($request_uri);
-$path = $url_parts['path'];
-
-// Handle API requests
-if (strpos($path, '/api/') === 0) {
-    $file = $base_path . $path;
-    if (file_exists($file) && is_file($file)) {
-        require $file;
-        exit;
-    }
-}
-
-// Handle public requests
-if (strpos($path, '/public/') === 0) {
-    $file = $base_path . $path;
-    if (file_exists($file) && is_file($file)) {
-        require $file;
-        exit;
-    }
-}
-
-// Default homepage
-if ($path === '/' || $path === '') {
-    require $base_path . '/public/index.php';
-    exit;
-}
-
-// 404
+// CORS and routing handled by .router.php
 http_response_code(404);
-echo json_encode(['error' => 'Not found']);
+echo json_encode(['error' => 'Use .router.php instead']);
 ?>

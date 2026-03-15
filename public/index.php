@@ -1,6 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+// CORS handled by .router.php
 
 echo json_encode([
     'message' => 'Noelle Backend API',

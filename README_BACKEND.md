@@ -13,6 +13,7 @@ Before starting the backend, ensure you have:
 - **Homebrew** (macOS) - For package management
 
 Check versions:
+
 ```bash
 php -v
 mysql --version
@@ -25,6 +26,7 @@ mysql --version
 ### Step 1: Start MySQL Service
 
 **macOS with Homebrew:**
+
 ```bash
 brew services start mysql
 # Verify it's running:
@@ -32,9 +34,11 @@ brew services list | grep mysql
 ```
 
 **Windows:**
+
 - MySQL should auto-start or use MySQL Installer
 
 **Linux:**
+
 ```bash
 sudo systemctl start mysql
 sudo systemctl enable mysql  # Auto-start on boot
@@ -58,6 +62,7 @@ php db_migrate.php
 ```
 
 **Expected output:**
+
 ```
 Migration complete!
 Migrated: 21
@@ -73,6 +78,7 @@ mysql -u root -e "USE noelle_store; SELECT COUNT(*) as total FROM products;"
 ```
 
 Should show:
+
 ```
 +-------+
 | total |
@@ -115,6 +121,7 @@ brew services list | grep mysql
 ```
 
 If not running, start it:
+
 ```bash
 brew services start mysql
 ```
@@ -128,20 +135,23 @@ cd /Users/simranjitsingh/clg-prj/noelle-backend
 ### Step 3: Start PHP Development Server
 
 ```bash
-php -S localhost:5000
+php -S localhost:5000 .router.php
 ```
 
 **Expected output:**
+
 ```
 [Sat Mar 15 10:00:00 2026] PHP 8.2.30 Development Server started
 [Sat Mar 15 10:00:00 2026] Listening on [::1]:5000
 [Sat Mar 15 10:00:00 2026] Press Ctrl-C to quit
 ```
 
+**⚠️ IMPORTANT:** Always include `.router.php` when starting the server. Without it, you'll get 403 Forbidden errors.
+
 ### Quick Start (One-liner)
 
 ```bash
-cd /Users/simranjitsingh/clg-prj/noelle-backend && php -S localhost:5000
+cd /Users/simranjitsingh/clg-prj/noelle-backend && php -S localhost:5000 .router.php
 ```
 
 ---
@@ -151,6 +161,7 @@ cd /Users/simranjitsingh/clg-prj/noelle-backend && php -S localhost:5000
 ### Method 1: Keyboard Shortcut (Recommended)
 
 In the terminal where the server is running, press:
+
 ```
 Ctrl + C  (Windows/Linux)
 or
@@ -158,6 +169,7 @@ Cmd + C   (macOS)
 ```
 
 **Expected output:**
+
 ```
 ^C[Sat Mar 15 10:05:30 2026] Shutting down
 ```
@@ -165,11 +177,13 @@ Cmd + C   (macOS)
 ### Method 2: Kill the Process
 
 **Find the process:**
+
 ```bash
 lsof -i :5000
 ```
 
 **Kill it:**
+
 ```bash
 kill -9 <PID>
 # Example: kill -9 12345
@@ -178,11 +192,13 @@ kill -9 <PID>
 ### Method 3: Using Terminal Commands
 
 **macOS/Linux:**
+
 ```bash
 lsof -ti :5000 | xargs kill -9
 ```
 
 **Windows:**
+
 ```bash
 netstat -ano | findstr :5000
 taskkill /PID <PID> /F
@@ -206,6 +222,7 @@ Use MySQL Installer to stop the service
 ## 🌐 API Endpoints
 
 ### Base URL
+
 ```
 http://localhost:5000
 ```
@@ -213,11 +230,13 @@ http://localhost:5000
 ### 1. Get All Products
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -238,6 +257,7 @@ GET http://localhost:5000/api/products.php
 ### 2. Get Products by Category
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?category=Lips
 GET http://localhost:5000/api/products.php?category=Face
@@ -247,6 +267,7 @@ GET http://localhost:5000/api/products.php?category=Eye
 ### 3. Get Popular Products
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?popular=1
 ```
@@ -254,6 +275,7 @@ GET http://localhost:5000/api/products.php?popular=1
 ### 4. Get New Products
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?new=1
 ```
@@ -261,6 +283,7 @@ GET http://localhost:5000/api/products.php?new=1
 ### 5. Get Single Product
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?id=Lips_1
 ```
@@ -268,6 +291,7 @@ GET http://localhost:5000/api/products.php?id=Lips_1
 ### 6. Limit Results
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?limit=6
 ```
@@ -275,6 +299,7 @@ GET http://localhost:5000/api/products.php?limit=6
 ### 7. Combine Filters
 
 **Request:**
+
 ```bash
 GET http://localhost:5000/api/products.php?category=Lips&popular=1&limit=5
 ```
@@ -302,6 +327,7 @@ curl http://localhost:5000/api/products.php | python3 -m json.tool
 ### Using Browser
 
 Simply visit in your browser:
+
 ```
 http://localhost:5000/api/products.php
 http://localhost:5000/api/products.php?category=Lips
@@ -361,6 +387,7 @@ exit
 ### Database Credentials
 
 **Current Settings (in `config/Database.php`):**
+
 ```php
 private $host = 'localhost';
 private $db_name = 'noelle_store';
@@ -371,6 +398,7 @@ private $pass = '';  // No password by default
 ### Change Credentials
 
 Edit `config/Database.php`:
+
 ```php
 private $host = 'localhost';
 private $db_name = 'noelle_store';
@@ -393,6 +421,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 ### Restrict to React Frontend Only
 
 Change to:
+
 ```php
 header('Access-Control-Allow-Origin: http://localhost:3000');
 ```
@@ -402,27 +431,32 @@ header('Access-Control-Allow-Origin: http://localhost:3000');
 ## 📝 Files Overview
 
 ### `api/products.php`
+
 - Main API endpoint that handles all product requests
 - Connects to MySQL database
 - Filters data based on query parameters
 - Returns JSON response
 
 ### `config/Database.php`
+
 - Database connection class
 - MySQL connection setup
 - Error handling
 
 ### `public/index.php`
+
 - API documentation page
 - Lists all available endpoints
 - Shows example requests
 
 ### `index.php`
+
 - Router that handles URL rewriting
 - Routes API requests to correct files
 - Handles static file serving
 
 ### `db_migrate.php`
+
 - One-time migration script
 - Copies data from `api.json` to MySQL
 - Can be re-run to refresh data
@@ -446,9 +480,9 @@ php db_migrate.php
 mysql -u root
 USE noelle_store;
 
-INSERT INTO products 
+INSERT INTO products
 (product_id, img, img2, name, price, description, sku, category, popular, is_new)
-VALUES 
+VALUES
 ('Test_1', 'https://...', 'https://...', 'Test Product', 20.00, 'Test desc', 'SKU999', 'Lips', 0, 1);
 
 SELECT * FROM products WHERE product_id = 'Test_1';
@@ -460,8 +494,8 @@ SELECT * FROM products WHERE product_id = 'Test_1';
 mysql -u root
 USE noelle_store;
 
-UPDATE products 
-SET price = 25.00, popular = 1 
+UPDATE products
+SET price = 25.00, popular = 1
 WHERE product_id = 'Lips_1';
 ```
 
@@ -481,6 +515,7 @@ DELETE FROM products WHERE product_id = 'Test_1';
 ### Issue: MySQL won't start
 
 **macOS:**
+
 ```bash
 # Check if MySQL is running
 brew services list | grep mysql
@@ -501,6 +536,7 @@ Error: Connection Error: mysqli_sql_exception: Connection refused
 ```
 
 **Solutions:**
+
 1. Verify MySQL is running: `brew services list | grep mysql`
 2. Start MySQL: `brew services start mysql`
 3. Verify credentials in `config/Database.php`
@@ -512,11 +548,13 @@ ERROR: Addr already in use
 ```
 
 **Solution:** Use a different port:
+
 ```bash
 php -S localhost:5001
 ```
 
 Then update frontend `.env`:
+
 ```env
 REACT_APP_API_URL=http://localhost:5001
 ```
@@ -524,6 +562,7 @@ REACT_APP_API_URL=http://localhost:5001
 ### Issue: Database doesn't exist
 
 **Solution:** Run migration:
+
 ```bash
 php db_migrate.php
 ```
@@ -531,6 +570,7 @@ php db_migrate.php
 ### Issue: API returns empty array
 
 **Possible causes:**
+
 1. Database isn't set up: Run `php db_migrate.php`
 2. MySQL isn't running: Start with `brew services start mysql`
 3. Filter is too specific: Try `/api/products.php` without filters
@@ -542,6 +582,7 @@ Cross-Origin Request Blocked
 ```
 
 **Solution:**
+
 1. Verify backend is running at `http://localhost:5000`
 2. Check frontend `.env` has correct API URL
 3. Verify CORS headers are in `api/products.php`
@@ -580,15 +621,17 @@ mysql -u root -e "USE noelle_store; SHOW TABLES;"
 ## 📈 Performance Tips
 
 1. **Use query parameters** to limit results:
+
    ```bash
    # Bad: fetches all 21 products
    curl http://localhost:5000/api/products.php
-   
+
    # Good: fetches only 6
    curl "http://localhost:5000/api/products.php?limit=6"
    ```
 
 2. **Filter by category** to reduce data:
+
    ```bash
    curl "http://localhost:5000/api/products.php?category=Lips"
    ```
@@ -626,8 +669,8 @@ The React frontend connects to this API using:
 ```javascript
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 fetch(`${apiUrl}/api/products.php?category=Lips`)
-  .then(res => res.json())
-  .then(data => setProducts(data));
+  .then((res) => res.json())
+  .then((data) => setProducts(data));
 ```
 
 ---
@@ -635,6 +678,7 @@ fetch(`${apiUrl}/api/products.php?category=Lips`)
 ## 📞 Support
 
 For issues:
+
 1. Check troubleshooting section
 2. Verify MySQL is running
 3. Check PHP version: `php -v`
@@ -653,15 +697,15 @@ For issues:
 
 ## 📝 Quick Reference
 
-| Command | Purpose |
-|---------|---------|
-| `php -S localhost:5000` | Start backend |
-| `Ctrl+C` | Stop backend |
-| `brew services start mysql` | Start MySQL |
-| `brew services stop mysql` | Stop MySQL |
-| `php db_migrate.php` | Migrate data |
-| `mysql -u root` | Connect to MySQL |
-| `curl http://localhost:5000/api/products.php` | Test API |
+| Command                                       | Purpose          |
+| --------------------------------------------- | ---------------- |
+| `php -S localhost:5000 .router.php`           | Start backend    |
+| `Ctrl+C`                                      | Stop backend     |
+| `brew services start mysql`                   | Start MySQL      |
+| `brew services stop mysql`                    | Stop MySQL       |
+| `php db_migrate.php`                          | Migrate data     |
+| `mysql -u root`                               | Connect to MySQL |
+| `curl http://localhost:5000/api/products.php` | Test API         |
 
 ---
 
