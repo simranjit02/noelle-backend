@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -41,7 +41,7 @@ $query = "
         p.price,
         p.img
     FROM cart c
-    JOIN products p ON c.product_id = p.id
+    JOIN products p ON c.product_id = p.product_id COLLATE utf8mb4_unicode_ci
     WHERE c.user_id = ?
     ORDER BY c.created_at DESC
 ";

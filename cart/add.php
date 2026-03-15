@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -27,7 +27,7 @@ if (empty($data['user_id']) || empty($data['product_id']) || empty($data['quanti
 }
 
 $user_id = $data['user_id'];
-$product_id = $data['product_id'];
+$product_id = intval($data['product_id']); // Convert to integer
 $quantity = intval($data['quantity']);
 
 if ($quantity < 1) {
@@ -49,7 +49,7 @@ if (!$check_stmt) {
     exit();
 }
 
-$check_stmt->bind_param("is", $user_id, $product_id);
+$check_stmt->bind_param("ii", $user_id, $product_id);
 $check_stmt->execute();
 $result = $check_stmt->get_result();
 

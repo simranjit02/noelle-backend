@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -50,13 +50,13 @@ foreach ($items as $item) {
         continue;
     }
     
-    $product_id = $item['product_id'];
+    $product_id = intval($item['product_id']); // Convert to integer
     $quantity = intval($item['quantity']);
     
     // Check if product already exists in user's cart
     $check_query = "SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?";
     $check_stmt = $conn->prepare($check_query);
-    $check_stmt->bind_param("is", $user_id, $product_id);
+    $check_stmt->bind_param("ii", $user_id, $product_id);
     $check_stmt->execute();
     $result = $check_stmt->get_result();
     
@@ -67,7 +67,7 @@ foreach ($items as $item) {
         
         $update_query = "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
         $update_stmt = $conn->prepare($update_query);
-        $update_stmt->bind_param("iis", $new_quantity, $user_id, $product_id);
+        $update_stmt->bind_param("iii", $new_quantity, $user_id, $product_id);
         $update_stmt->execute();
         $update_stmt->close();
     } else {

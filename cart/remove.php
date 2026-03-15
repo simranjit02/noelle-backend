@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     http_response_code(405);
@@ -27,7 +27,7 @@ if (empty($data['user_id']) || empty($data['product_id'])) {
 }
 
 $user_id = $data['user_id'];
-$product_id = $data['product_id'];
+$product_id = intval($data['product_id']); // Convert to integer
 
 $db = new Database();
 $conn = $db->connect();
@@ -42,7 +42,7 @@ if (!$delete_stmt) {
     exit();
 }
 
-$delete_stmt->bind_param("is", $user_id, $product_id);
+$delete_stmt->bind_param("ii", $user_id, $product_id);
 
 if ($delete_stmt->execute()) {
     if ($delete_stmt->affected_rows > 0) {

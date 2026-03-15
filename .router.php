@@ -35,6 +35,38 @@ if (strpos($uri, '/api/') === 0) {
     exit(1);
 }
 
+// CART REQUEST
+if (strpos($uri, '/cart/') === 0) {
+    $file = __DIR__ . $uri;
+    
+    // File exists and is a real file
+    if (is_file($file)) {
+        require $file;
+        exit(0);
+    }
+    
+    // Cart file not found
+    http_response_code(404);
+    echo json_encode(['error' => 'Cart endpoint not found', 'requested' => $uri]);
+    exit(1);
+}
+
+// AUTH REQUEST
+if (strpos($uri, '/auth/') === 0) {
+    $file = __DIR__ . $uri;
+    
+    // File exists and is a real file
+    if (is_file($file)) {
+        require $file;
+        exit(0);
+    }
+    
+    // Auth file not found
+    http_response_code(404);
+    echo json_encode(['error' => 'Auth endpoint not found', 'requested' => $uri]);
+    exit(1);
+}
+
 // ROOT / HOME
 if ($uri === '/' || $uri === '') {
     require __DIR__ . '/public/index.php';

@@ -1,5 +1,15 @@
 <?php
-// CORS and routing handled by .router.php - just process the request
+// CORS Headers
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 require_once __DIR__ . '/../config/Database.php';
 
@@ -10,7 +20,7 @@ $conn = $db->connect();
 $category = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : null;
 $popular = isset($_GET['popular']) ? (int)$_GET['popular'] : null;
 $is_new = isset($_GET['new']) ? (int)$_GET['new'] : null;
-$product_id = isset($_GET['id']) ? $conn->real_escape_string($_GET['id']) : null;
+$product_id = isset($_GET['id']) ? (int)$_GET['id'] : null;  // Convert to integer
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
 
 // Build query
@@ -26,7 +36,7 @@ if ($is_new !== null) {
     $query .= " AND is_new = $is_new";
 }
 if ($product_id) {
-    $query .= " AND product_id = '$product_id'";
+    $query .= " AND product_id = $product_id";
 }
 
 $query .= " LIMIT $limit";

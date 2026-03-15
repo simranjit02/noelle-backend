@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
     http_response_code(405);
@@ -27,7 +27,7 @@ if (empty($data['user_id']) || empty($data['product_id']) || !isset($data['quant
 }
 
 $user_id = $data['user_id'];
-$product_id = $data['product_id'];
+$product_id = intval($data['product_id']); // Convert to integer
 $quantity = intval($data['quantity']);
 
 // If quantity is 0 or less, remove the product
@@ -51,7 +51,7 @@ if ($quantity > 0) {
         exit();
     }
     
-    $update_stmt->bind_param("iis", $quantity, $user_id, $product_id);
+    $update_stmt->bind_param("iii", $quantity, $user_id, $product_id);
     
     if ($update_stmt->execute()) {
         http_response_code(200);
@@ -76,7 +76,7 @@ if ($quantity > 0) {
         exit();
     }
     
-    $delete_stmt->bind_param("is", $user_id, $product_id);
+    $delete_stmt->bind_param("ii", $user_id, $product_id);
     
     if ($delete_stmt->execute()) {
         http_response_code(200);
