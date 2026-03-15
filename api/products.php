@@ -20,7 +20,7 @@ $conn = $db->connect();
 $category = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : null;
 $popular = isset($_GET['popular']) ? (int)$_GET['popular'] : null;
 $is_new = isset($_GET['new']) ? (int)$_GET['new'] : null;
-$product_id = isset($_GET['id']) ? (int)$_GET['id'] : null;  // Convert to integer
+$product_id = isset($_GET['id']) ? $conn->real_escape_string($_GET['id']) : null;  // Keep as string - product_id is VARCHAR
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
 
 // Build query
@@ -36,7 +36,7 @@ if ($is_new !== null) {
     $query .= " AND is_new = $is_new";
 }
 if ($product_id) {
-    $query .= " AND product_id = $product_id";
+    $query .= " AND product_id = '$product_id'";  // Add quotes since product_id is VARCHAR
 }
 
 $query .= " LIMIT $limit";
